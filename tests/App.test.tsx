@@ -57,7 +57,6 @@ describe("<App/>", () => {
     expect(list.childNodes.length).toBe(1);
 
     //borramos todo
-
     const initialItem = screen.getByText("hola");
     const initialRemoveButton = initialItem.querySelector("button");
     expect(initialRemoveButton).toBeDefined();
