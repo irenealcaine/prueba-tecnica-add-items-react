@@ -1,13 +1,12 @@
+import React, { useState } from "react";
+import "./App.css";
 
-import React, { useState } from 'react'
-import './App.css'
-
-type ItemId = string
+type ItemId = string;
 
 interface Item {
-  id: ItemId
-  timestamp: number
-  text: string
+  id: ItemId;
+  timestamp: number;
+  text: string;
 }
 
 // const INITIAL_ITEMS: Item[] = [
@@ -23,29 +22,28 @@ interface Item {
 // ]
 
 function App() {
-
-  const [items, setItems] = useState<Item[]>([])
+  const [items, setItems] = useState<Item[]>([]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const { elements } = event.currentTarget
-    const input = elements.namedItem("item") //asegurarse de que es u input
-    const isInput = input instanceof HTMLInputElement
-    if (!isInput || input == null) return
+    const { elements } = event.currentTarget;
+    const input = elements.namedItem("item"); //asegurarse de que es u input
+    const isInput = input instanceof HTMLInputElement;
+    if (!isInput || input == null) return;
 
     const newItem: Item = {
       id: crypto.randomUUID(),
       text: input.value,
-      timestamp: Date.now()
-    }
+      timestamp: Date.now(),
+    };
 
     setItems((prevItems) => {
-      return [...prevItems, newItem]
-    })
+      return [...prevItems, newItem];
+    });
 
-    input.value = ''
-  }
+    input.value = "";
+  };
 
   // const createHandleRemoveItem = (id: ItemId) => () => {
   //   setItems(prevItems => {
@@ -59,13 +57,14 @@ function App() {
         <h1>Prueba técnica</h1>
         <h2>Añadir y eliminar elementos de una lista</h2>
         <form onSubmit={handleSubmit} aria-label="Añadir elementos a la lista">
-          <label htmlFor="">
-            Elemento  a introducir:
+          <label htmlFor="item">
+            <span>Elemento a introducir</span>
             <input
+              id="item"
               type="text"
-              name='item'
+              name="item"
               required
-              placeholder='Introduce el elemento'
+              placeholder="Introduce el elemento"
             />
             <button>Añadir</button>
           </label>
@@ -74,39 +73,36 @@ function App() {
       <section>
         <h2>Lista de elementos</h2>
 
-        {items.length === 0
+        {items.length === 0 ? (
+          <p>No hay elementos</p>
+        ) : (
+          <ul>
+            {items.map((item) => {
+              //importante! evitar usar el index como key
+              return (
+                <li key={item.id}>
+                  <span>{item.text}</span>
+                  <button
+                    onClick={() => {
+                      setItems((prevItems) => {
+                        return prevItems.filter(
+                          (currentItem) => currentItem.id !== item.id,
+                        );
+                      });
 
-          ? (
-            <p>No hay elementos</p>
-
-          ) : (
-            <ul>
-              {
-                items.map(item => { //importante! evitar usar el index como key
-                  return (
-                    <li key={item.id}>
-                      {item.text}
-                      <button
-                        onClick={() => {
-                          setItems(prevItems => {
-                            return prevItems.filter(currentItem => currentItem.id !== item.id)
-                          })
-
-                          //createHandleRemoveItem(item.id) //otra opción, se separa el bloque de función
-                        }}
-                      >
-                        Eliminar
-                      </button>
-                    </li>
-                  )
-                })}
-            </ul>
-          )
-        }
-
+                      //createHandleRemoveItem(item.id) //otra opción, se separa el bloque de función
+                    }}
+                  >
+                    Eliminar
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </section>
     </main>
-  )
+  );
 }
 
-export default App
+export default App;
